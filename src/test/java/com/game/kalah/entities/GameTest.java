@@ -22,6 +22,13 @@ public class GameTest {
         // AND the Board should have 14 pits
         assertEquals(14, game.getBoard().getPits().size());
 
+        // AND all REGULAR Pits should have 6 stones
+        assertTrue(game.getBoard()
+                .getPits()
+                .stream()
+                .filter(pit -> PitType.REGULAR.equals(pit.getType()))
+                .allMatch(pit -> pit.getStonesQuantity().equals(6)));
+
         // AND should have 2 houses
         assertEquals(2, game.getBoard()
                 .getPits()
@@ -39,6 +46,13 @@ public class GameTest {
                 .stream()
                 .filter(pit -> PitType.HOUSE.equals(pit.getType()))
                 .anyMatch(pit -> pit.getId().equals(14)));
+
+        // AND all the HOUSE Pits should have 0 stones
+        assertTrue(game.getBoard()
+                .getPits()
+                .stream()
+                .filter(pit -> PitType.HOUSE.equals(pit.getType()))
+                .allMatch(pit -> pit.getStonesQuantity().equals(0)));
     }
 
 }
