@@ -42,12 +42,10 @@ public class Board {
 
         for (int i = 0; i < stonesQuantity; i++) {
             Pit currentPit = loopingListIterator.next();
-            if (PitType.REGULAR.equals(currentPit.getType()) || isPlayerHouse(currentPit, movingPit)) {
-                currentPit.add(1);
-            } else {
+            if (!PitType.REGULAR.equals(currentPit.getType()) && !isPlayerHouse(currentPit, movingPit)) {
                 currentPit = loopingListIterator.next();
-                currentPit.add(1);
             }
+            currentPit.add(1);
         }
     }
 
