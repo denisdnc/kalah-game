@@ -18,6 +18,10 @@ public class Pit {
         this.stonesQuantity = this.stonesQuantity + stonesQuantity;
     }
 
+//    private boolean isOpponentHouse(int movingPit) {
+//        return HOUSES_INDEXES.contains(movingPit) && (movingPit > PITS_QUANTITY / 2);
+//    }
+
     public int getId() {
         return id;
     }

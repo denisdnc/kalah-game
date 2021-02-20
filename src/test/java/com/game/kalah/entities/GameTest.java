@@ -3,12 +3,9 @@ package com.game.kalah.entities;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class GameTest {
 
@@ -58,42 +55,103 @@ public class GameTest {
                 .stream()
                 .filter(pit -> PitType.HOUSE.equals(pit.getType()))
                 .allMatch(pit -> pit.getStonesQuantity() == 0));
+
+        // AND stones total quantity should be 72
+        assertEquals(72, game.getBoard()
+                .getPits()
+                .stream()
+                .mapToInt(Pit::getStonesQuantity)
+                .sum());
     }
 
     @Test
     @DisplayName("Scenario: make a regular move")
-    void move() {
+    void regularMove() {
         // GIVEN a new game
         Game game = new Game();
 
-        // WHEN make a move from Pit 1
-        game.getBoard().move(1);
+        // WHEN make a move from Pit 2
+        game.getBoard().move(2);
 
         // THEN pits status should be
         List<Pit> pits = game.getBoard()
-                .getPits()
-                .stream()
-                .sorted(Comparator.comparingInt(Pit::getId))
-                .collect(Collectors.toList());
+                .getPits();
 
         assertAll(
-                () -> assertEquals(0, pits.get(0).getStonesQuantity()),
-                () -> assertEquals(7, pits.get(2).getStonesQuantity()),
-                () -> assertEquals(7, pits.get(3).getStonesQuantity()),
-                () -> assertEquals(7, pits.get(1).getStonesQuantity()),
-                () -> assertEquals(7, pits.get(4).getStonesQuantity()),
-                () -> assertEquals(7, pits.get(5).getStonesQuantity()),
+                () -> assertEquals(6, getPitStonesQuantity(1, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(2, pits)),
+                () -> assertEquals(7, getPitStonesQuantity(3, pits)),
+                () -> assertEquals(7, getPitStonesQuantity(4, pits)),
+                () -> assertEquals(7, getPitStonesQuantity(5, pits)),
+                () -> assertEquals(7, getPitStonesQuantity(6, pits)),
                 // HOUSE pit
-                () -> assertEquals(1, pits.get(6).getStonesQuantity()),
-                () -> assertEquals(6, pits.get(7).getStonesQuantity()),
-                () -> assertEquals(6, pits.get(8).getStonesQuantity()),
-                () -> assertEquals(6, pits.get(9).getStonesQuantity()),
-                () -> assertEquals(6, pits.get(10).getStonesQuantity()),
-                () -> assertEquals(6, pits.get(11).getStonesQuantity()),
-                () -> assertEquals(6, pits.get(12).getStonesQuantity()),
+                () -> assertEquals(1, getPitStonesQuantity(7, pits)),
+                () -> assertEquals(7, getPitStonesQuantity(8, pits)),
+                () -> assertEquals(6, getPitStonesQuantity(9, pits)),
+                () -> assertEquals(6, getPitStonesQuantity(10, pits)),
+                () -> assertEquals(6, getPitStonesQuantity(11, pits)),
+                () -> assertEquals(6, getPitStonesQuantity(12, pits)),
+                () -> assertEquals(6, getPitStonesQuantity(13, pits)),
                 // HOUSE pit
-                () -> assertEquals(0, pits.get(13).getStonesQuantity())
+                () -> assertEquals(0, getPitStonesQuantity(14, pits))
         );
+
+        // AND stones total quantity should be 72
+        assertEquals(72, game.getBoard()
+                .getPits()
+                .stream()
+                .mapToInt(Pit::getStonesQuantity)
+                .sum());
+    }
+
+    int getPitStonesQuantity(int pitId, List<Pit> pits) {
+        return pits.stream().filter(pit -> pit.getId() == pitId).mapToInt(Pit::getStonesQuantity).sum();
+    }
+
+    @Test
+    @DisplayName("Scenario: step over opponent's HOUSE")
+    void stepOverOpponentHouse() {
+        // GIVEN a new game
+        Game game = new Game();
+
+        // AND make a moves on Pits 1, 13, 2 and 12
+        game.getBoard().move(1);
+        game.getBoard().move(13);
+        game.getBoard().move(2);
+        game.getBoard().move(12);
+
+        // WHEN make another move from Pit 6
+        game.getBoard().move(6);
+
+        // THEN the last move should step over opponent's HOUSE and status should be
+        List<Pit> pits = game.getBoard()
+                .getPits();
+
+        assertAll(
+                () -> assertEquals(3, getPitStonesQuantity(1, pits)),
+                () -> assertEquals(1, getPitStonesQuantity(2, pits)),
+                () -> assertEquals(10, getPitStonesQuantity(3, pits)),
+                () -> assertEquals(10, getPitStonesQuantity(4, pits)),
+                () -> assertEquals(9, getPitStonesQuantity(5, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(6, pits)),
+                // HOUSE pit
+                () -> assertEquals(3, getPitStonesQuantity(7, pits)),
+                () -> assertEquals(8, getPitStonesQuantity(8, pits)),
+                () -> assertEquals(8, getPitStonesQuantity(9, pits)),
+                () -> assertEquals(8, getPitStonesQuantity(10, pits)),
+                () -> assertEquals(7, getPitStonesQuantity(11, pits)),
+                () -> assertEquals(1, getPitStonesQuantity(12, pits)),
+                () -> assertEquals(2, getPitStonesQuantity(13, pits)),
+                // HOUSE pit
+                () -> assertEquals(2, getPitStonesQuantity(14, pits))
+        );
+
+        // AND stones total quantity should be 72
+        assertEquals(72, game.getBoard()
+                .getPits()
+                .stream()
+                .mapToInt(Pit::getStonesQuantity)
+                .sum());
     }
 
 }

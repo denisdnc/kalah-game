@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public class Game {
 
+    // TODO change to UUID type
     private String id;
     private Board board;
 
