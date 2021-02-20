@@ -27,7 +27,7 @@ public class GameTest {
                 .getPits()
                 .stream()
                 .filter(pit -> PitType.REGULAR.equals(pit.getType()))
-                .allMatch(pit -> pit.getStonesQuantity().equals(6)));
+                .allMatch(pit -> pit.getStonesQuantity() == 6));
 
         // AND should have 2 houses
         assertEquals(2, game.getBoard()
@@ -35,24 +35,33 @@ public class GameTest {
                 .stream()
                 .filter(pit -> PitType.HOUSE.equals(pit.getType())).count());
 
-        // AND pits ids 7 and 14 should be Houses
+        // AND pits with ids 7 and 14 should be HOUSE type
         assertTrue(game.getBoard()
                 .getPits()
                 .stream()
                 .filter(pit -> PitType.HOUSE.equals(pit.getType()))
-                .anyMatch(pit -> pit.getId().equals(7)));
+                .anyMatch(pit -> pit.getId() == 7));
         assertTrue(game.getBoard()
                 .getPits()
                 .stream()
                 .filter(pit -> PitType.HOUSE.equals(pit.getType()))
-                .anyMatch(pit -> pit.getId().equals(14)));
+                .anyMatch(pit -> pit.getId() == 14));
 
         // AND all the HOUSE Pits should have 0 stones
         assertTrue(game.getBoard()
                 .getPits()
                 .stream()
                 .filter(pit -> PitType.HOUSE.equals(pit.getType()))
-                .allMatch(pit -> pit.getStonesQuantity().equals(0)));
+                .allMatch(pit -> pit.getStonesQuantity() == 0));
+    }
+
+    @Test
+    @DisplayName("Scenario: make a regular move")
+    void move() {
+        // GIVEN a new game
+        Game game = new Game();
+
+        // WHEN 
     }
 
 }
