@@ -3,7 +3,12 @@ package com.game.kalah.entities;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 public class GameTest {
 
@@ -61,7 +66,34 @@ public class GameTest {
         // GIVEN a new game
         Game game = new Game();
 
-        // WHEN 
+        // WHEN make a move from Pit 1
+        game.getBoard().move(1);
+
+        // THEN pits status should be
+        List<Pit> pits = game.getBoard()
+                .getPits()
+                .stream()
+                .sorted(Comparator.comparingInt(Pit::getId))
+                .collect(Collectors.toList());
+
+        assertAll(
+                () -> assertEquals(0, pits.get(0).getStonesQuantity()),
+                () -> assertEquals(7, pits.get(2).getStonesQuantity()),
+                () -> assertEquals(7, pits.get(3).getStonesQuantity()),
+                () -> assertEquals(7, pits.get(1).getStonesQuantity()),
+                () -> assertEquals(7, pits.get(4).getStonesQuantity()),
+                () -> assertEquals(7, pits.get(5).getStonesQuantity()),
+                // HOUSE pit
+                () -> assertEquals(1, pits.get(6).getStonesQuantity()),
+                () -> assertEquals(6, pits.get(7).getStonesQuantity()),
+                () -> assertEquals(6, pits.get(8).getStonesQuantity()),
+                () -> assertEquals(6, pits.get(9).getStonesQuantity()),
+                () -> assertEquals(6, pits.get(10).getStonesQuantity()),
+                () -> assertEquals(6, pits.get(11).getStonesQuantity()),
+                () -> assertEquals(6, pits.get(12).getStonesQuantity()),
+                // HOUSE pit
+                () -> assertEquals(0, pits.get(13).getStonesQuantity())
+        );
     }
 
 }

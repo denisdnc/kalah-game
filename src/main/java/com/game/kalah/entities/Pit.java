@@ -14,6 +14,10 @@ public class Pit {
         this.stonesQuantity = PitType.REGULAR.equals(type) ? DEFAULT_STONES_QUANTITY : 0;
     }
 
+    public void add(int stonesQuantity) {
+        this.stonesQuantity = this.stonesQuantity + stonesQuantity;
+    }
+
     public int getId() {
         return id;
     }
@@ -24,5 +28,9 @@ public class Pit {
 
     public int getStonesQuantity() {
         return stonesQuantity;
+    }
+
+    public void setStonesQuantity(int stonesQuantity) {
+        this.stonesQuantity = stonesQuantity;
     }
 }
