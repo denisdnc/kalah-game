@@ -4,16 +4,15 @@ import java.util.UUID;
 
 public class Game {
 
-    // TODO change to UUID type
-    private String id;
+    private UUID id;
     private Board board;
 
     public Game() {
-        this.id = UUID.randomUUID().toString();
+        this.id = UUID.randomUUID();
         this.board = new Board();
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
