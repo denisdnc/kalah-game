@@ -1,5 +1,6 @@
 package com.game.kalah.entities;
 
+import com.game.kalah.exceptions.BusinessException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -303,6 +304,20 @@ public class GameTest {
 
         // AND the turn is from the SOUTH_PLAYER
         assertEquals(Player.SOUTH_PLAYER, game.getBoard().getTurn());
+    }
+
+    @Test
+    @DisplayName("Scenario: validate move from empty pit")
+    void emptyPit() {
+        // GIVEN a new game
+        Game game = new Game();
+
+        // WHEN make a move from Pits
+        game.getBoard().move(1);
+        BusinessException exception = assertThrows(BusinessException.class, () -> game.getBoard().move(1));
+
+        // THEN should throw error validating invalid move
+        assertEquals("Invalid move, pit is empty", exception.getMessage());
     }
 
     // TODO validate move from empty pit

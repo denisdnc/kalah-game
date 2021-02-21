@@ -1,5 +1,6 @@
 package com.game.kalah.entities;
 
+import com.game.kalah.exceptions.BusinessException;
 import org.apache.commons.collections4.iterators.LoopingListIterator;
 
 import java.util.ArrayList;
@@ -35,11 +36,16 @@ public class Board {
         pits.stream()
                 .filter(pit -> pit.getId() == pitId)
                 .findFirst()
-                .ifPresent(pit -> sowsToRight(pit));
+                .ifPresent(this::sowsToRight);
     }
 
     private void sowsToRight(Pit movingPit) {
         int pickedStones = movingPit.getStonesQuantity();
+
+        if (pickedStones == 0) {
+            throw new BusinessException("Invalid move, pit is empty");
+        }
+
         movingPit.empty();
 
         LoopingListIterator<Pit> loopingListIterator = new LoopingListIterator<>(pits);
