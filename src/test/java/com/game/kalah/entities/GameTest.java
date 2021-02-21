@@ -15,7 +15,6 @@ public class GameTest {
     void newGame() {
         // WHEN a new Game is created
         Game game = new Game();
-
         // THEN the Game should have an ID
         assertNotNull(game.getId());
 
@@ -332,6 +331,19 @@ public class GameTest {
 
         // THEN should throw error validating invalid move
         assertEquals("Invalid move, cannot move from a HOSE type pit", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Scenario: invalid Pit")
+    void invalidPit() {
+        // GIVEN a new game
+        Game game = new Game();
+
+        // WHEN make a move from a invalid pid id
+        BusinessException exception = assertThrows(BusinessException.class, () -> game.getBoard().move(100));
+
+        // THEN should throw error validating invalid move
+        assertEquals("Pit now found: 100", exception.getMessage());
     }
 
 }

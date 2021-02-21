@@ -33,23 +33,16 @@ public class Board {
      * @param pitId Pits Id to start the movement
      */
     public void move(int pitId) {
-        pits.stream()
+        Pit movingPit = pits.stream()
                 .filter(pit -> pit.getId() == pitId)
                 .findFirst()
-                .ifPresent(this::sowsToRight);
+                .orElseThrow(() -> new BusinessException(String.format("Pit now found: %s", pitId)));
+        validateMove(movingPit);
+        sowsToRight(movingPit);
     }
 
     private void sowsToRight(Pit movingPit) {
         int pickedStones = movingPit.getStonesQuantity();
-
-        if (pickedStones == 0) {
-            throw new BusinessException("Invalid move, pit is empty");
-        }
-
-        if (PitType.HOUSE.equals(movingPit.getType())) {
-            throw new BusinessException("Invalid move, cannot move from a HOSE type pit");
-        }
-
         movingPit.empty();
 
         LoopingListIterator<Pit> loopingListIterator = new LoopingListIterator<>(pits);
@@ -87,6 +80,16 @@ public class Board {
             }
         }
 
+    }
+
+    private void validateMove(Pit movingPit) {
+        if (movingPit.getStonesQuantity() == 0) {
+            throw new BusinessException("Invalid move, pit is empty");
+        }
+
+        if (PitType.HOUSE.equals(movingPit.getType())) {
+            throw new BusinessException("Invalid move, cannot move from a HOSE type pit");
+        }
     }
 
     private boolean isOpponentHouse(Pit movingPit, Pit currentPit) {
