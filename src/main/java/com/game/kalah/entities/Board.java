@@ -57,7 +57,10 @@ public class Board {
 
             if (isLastStone(i, pickedStones)) {
                 // After the movement still 1, meaning that was empty before
-                if (currentPit.getOwner().equals(turn) && PitType.REGULAR.equals(currentPit.getType()) && currentPit.getStonesQuantity() == 1) {
+                if (currentPit.getOwner().equals(turn) &&
+                        PitType.REGULAR.equals(currentPit.getType()) &&
+                        currentPit.getStonesQuantity() == 1 &&
+                        getOppositePit(currentPit).getStonesQuantity() > 0) {
                     Pit oppositePit = getOppositePit(currentPit);
                     int stonesCaptureQuantity = oppositePit.getStonesQuantity() + currentPit.getStonesQuantity();
                     Pit playerHouse = getPlayerHouse(turn);
@@ -109,7 +112,7 @@ public class Board {
 
     private Pit getOppositePit(Pit currentPit) {
         return pits.stream()
-                .filter(pit -> pit.getId() == PITS_TOTAL_QUANTITY - currentPit.getId())
+                .filter(pit -> pit.getId() == (PITS_TOTAL_QUANTITY - currentPit.getId()))
                 .findFirst()
                 .orElse(null);
     }

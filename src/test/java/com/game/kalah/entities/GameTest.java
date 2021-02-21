@@ -215,8 +215,8 @@ public class GameTest {
     }
 
     @Test
-    @DisplayName("Scenario: captures other player's pit and his own stone")
-    void capturesOtherPlayerPit() {
+    @DisplayName("Scenario: captures other player's pit and his own stone - South Player")
+    void capturesOtherPlayerPitSouthPlayer() {
         // GIVEN a new game
         Game game = new Game();
 
@@ -264,31 +264,34 @@ public class GameTest {
         // GIVEN a new game
         Game game = new Game();
 
-        // WHEN make a moves on Pits 1, 2, 8 and 1
+        // WHEN make a moves on Pits
         game.getBoard().move(1);
-        game.getBoard().move(2);
+        game.getBoard().move(4);
         game.getBoard().move(8);
-        game.getBoard().move(1);
+        game.getBoard().move(5);
+        game.getBoard().move(9);
+        game.getBoard().move(4);
+        game.getBoard().move(8);
 
         // THEN the last move should captures other player's pit and his own stone
         List<Pit> pits = game.getBoard()
                 .getPits();
 
         assertAll(
-                () -> assertEquals(0, getPitStonesQuantity(1, pits)),
-                () -> assertEquals(0, getPitStonesQuantity(2, pits)),
+                () -> assertEquals(2, getPitStonesQuantity(1, pits)),
+                () -> assertEquals(8, getPitStonesQuantity(2, pits)),
                 () -> assertEquals(8, getPitStonesQuantity(3, pits)),
-                () -> assertEquals(8, getPitStonesQuantity(4, pits)),
-                () -> assertEquals(8, getPitStonesQuantity(5, pits)),
-                () -> assertEquals(8, getPitStonesQuantity(6, pits)),
-                () -> assertEquals(10, getPitStonesQuantity(7, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(4, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(5, pits)),
+                () -> assertEquals(9, getPitStonesQuantity(6, pits)),
+                () -> assertEquals(3, getPitStonesQuantity(7, pits)),
                 () -> assertEquals(0, getPitStonesQuantity(8, pits)),
-                () -> assertEquals(8, getPitStonesQuantity(9, pits)),
-                () -> assertEquals(7, getPitStonesQuantity(10, pits)),
-                () -> assertEquals(7, getPitStonesQuantity(11, pits)),
-                () -> assertEquals(0, getPitStonesQuantity(12, pits)),
-                () -> assertEquals(7, getPitStonesQuantity(13, pits)),
-                () -> assertEquals(1, getPitStonesQuantity(14, pits))
+                () -> assertEquals(0, getPitStonesQuantity(9, pits)),
+                () -> assertEquals(10, getPitStonesQuantity(10, pits)),
+                () -> assertEquals(10, getPitStonesQuantity(11, pits)),
+                () -> assertEquals(9, getPitStonesQuantity(12, pits)),
+                () -> assertEquals(9, getPitStonesQuantity(13, pits)),
+                () -> assertEquals(4, getPitStonesQuantity(14, pits))
         );
 
         // AND stones total quantity should be 72
@@ -299,7 +302,7 @@ public class GameTest {
                 .sum());
 
         // AND the turn is from the SOUTH_PLAYER
-        assertEquals(Player.NORTH_PLAYER, game.getBoard().getTurn());
+        assertEquals(Player.SOUTH_PLAYER, game.getBoard().getTurn());
     }
 
     // TODO validate move from empty pit
