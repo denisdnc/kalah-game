@@ -7,7 +7,7 @@ public class Pit {
     private final Integer id;
     private final PitType type;
     private int stonesQuantity;
-    private Player owner;
+    private final Player owner;
 
     public Pit(int id, PitType type, Player owner) {
         this.id = id;
@@ -18,6 +18,10 @@ public class Pit {
 
     public void add(int stonesQuantity) {
         this.stonesQuantity = this.stonesQuantity + stonesQuantity;
+    }
+
+    public void empty() {
+        this.stonesQuantity = 0;
     }
 
     public int getId() {

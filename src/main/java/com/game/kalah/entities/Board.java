@@ -26,8 +26,8 @@ public class Board {
 
     /**
      * Picks up all the stones in any of their own pits, and sows the stones on to the right, one in
-     * each of the following pits, including his own Kalah.
-     * No stones are put in the opponent's' Kalah.
+     * each of the following pits, including his own House.
+     * No stones are put in the opponent's' House.
      *
      * @param pitId Pits Id to start the movement
      */
@@ -39,24 +39,31 @@ public class Board {
     }
 
     private void sowsToRight(Pit movingPit) {
-        int stonesQuantity = movingPit.getStonesQuantity();
-        movingPit.setStonesQuantity(0);
+        int pickedStones = movingPit.getStonesQuantity();
+        movingPit.empty();
+
         LoopingListIterator<Pit> loopingListIterator = new LoopingListIterator<>(pits);
 
         for (int i = 0; i < movingPit.getId(); i++) {
             loopingListIterator.next();
         }
 
-        for (int i = 0; i < stonesQuantity; i++) {
+        for (int i = 0; i < pickedStones; i++) {
             Pit currentPit = loopingListIterator.next();
-            if (PitType.HOUSE.equals(currentPit.getType()) && !isPlayerHouse(currentPit, movingPit.getId())) {
+            if (isOpponentHouse(movingPit, currentPit)) {
                 currentPit = loopingListIterator.next();
             }
             currentPit.add(1);
 
-            if (isLastStone(i, stonesQuantity)) {
-                if (currentPit.getStonesQuantity() == 0) {
-
+            if (isLastStone(i, pickedStones)) {
+                // After the movement still 1, meaning that was empty before
+                if (currentPit.getOwner().equals(turn) && PitType.REGULAR.equals(currentPit.getType()) && currentPit.getStonesQuantity() == 1) {
+                    Pit oppositePit = getOppositePit(currentPit);
+                    int stonesCaptureQuantity = oppositePit.getStonesQuantity() + currentPit.getStonesQuantity();
+                    Pit playerHouse = getPlayerHouse(turn);
+                    playerHouse.setStonesQuantity(playerHouse.getStonesQuantity() + stonesCaptureQuantity);
+                    currentPit.empty();
+                    oppositePit.empty();
                 }
 
                 if (isPlayerHouse(currentPit, movingPit.getId())) {
@@ -69,8 +76,19 @@ public class Board {
 
     }
 
+    private boolean isOpponentHouse(Pit movingPit, Pit currentPit) {
+        return PitType.HOUSE.equals(currentPit.getType()) && !isPlayerHouse(currentPit, movingPit.getId());
+    }
+
     private boolean isPlayerHouse(Pit currentPit, int movingPit) {
         return currentPit.getId() == getPlayerHouseIndex(movingPit);
+    }
+
+    private Pit getPlayerHouse(Player player) {
+        return pits.stream()
+                .filter(pit -> PitType.HOUSE.equals(pit.getType()) && pit.getOwner().equals(player))
+                .findFirst()
+                .orElse(null);
     }
 
     private int getPlayerHouseIndex(int movingPit) {
@@ -87,6 +105,13 @@ public class Board {
 
     private Player getOpponent(int movingPit) {
         return getCurrentPlayer(movingPit).equals(Player.SOUTH_PLAYER) ? Player.NORTH_PLAYER : Player.SOUTH_PLAYER;
+    }
+
+    private Pit getOppositePit(Pit currentPit) {
+        return pits.stream()
+                .filter(pit -> pit.getId() == PITS_TOTAL_QUANTITY - currentPit.getId())
+                .findFirst()
+                .orElse(null);
     }
 
     public List<Pit> getPits() {
