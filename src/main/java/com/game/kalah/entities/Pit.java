@@ -7,20 +7,18 @@ public class Pit {
     private final Integer id;
     private final PitType type;
     private int stonesQuantity;
+    private Player owner;
 
-    public Pit(int id, PitType type) {
+    public Pit(int id, PitType type, Player owner) {
         this.id = id;
         this.type = type;
         this.stonesQuantity = PitType.REGULAR.equals(type) ? DEFAULT_STONES_QUANTITY : 0;
+        this.owner = owner;
     }
 
     public void add(int stonesQuantity) {
         this.stonesQuantity = this.stonesQuantity + stonesQuantity;
     }
-
-//    private boolean isOpponentHouse(int movingPit) {
-//        return HOUSES_INDEXES.contains(movingPit) && (movingPit > PITS_QUANTITY / 2);
-//    }
 
     public int getId() {
         return id;
@@ -36,5 +34,9 @@ public class Pit {
 
     public void setStonesQuantity(int stonesQuantity) {
         this.stonesQuantity = stonesQuantity;
+    }
+
+    public Player getOwner() {
+        return owner;
     }
 }

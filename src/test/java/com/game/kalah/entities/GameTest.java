@@ -62,6 +62,17 @@ public class GameTest {
                 .stream()
                 .mapToInt(Pit::getStonesQuantity)
                 .sum());
+
+        // AND default turn is SOUTH_PLAYER
+        assertEquals(Player.SOUTH_PLAYER, game.getBoard().getTurn());
+
+        // AND the pits should have the following owners
+        assertTrue(game.getBoard().getPits().stream()
+                .filter(pit -> pit.getId() <= 7)
+                .allMatch(pit -> pit.getOwner().equals(Player.SOUTH_PLAYER)));
+        assertTrue(game.getBoard().getPits().stream()
+                .filter(pit -> pit.getId() > 7)
+                .allMatch(pit -> pit.getOwner().equals(Player.NORTH_PLAYER)));
     }
 
     int getPitStonesQuantity(int pitId, List<Pit> pits) {
@@ -74,23 +85,23 @@ public class GameTest {
         // GIVEN a new game
         Game game = new Game();
 
-        // WHEN make a move from Pit 2
-        game.getBoard().move(2);
+        // WHEN make a move from Pit 1
+        game.getBoard().move(1);
 
         // THEN pits status should be
         List<Pit> pits = game.getBoard()
                 .getPits();
 
         assertAll(
-                () -> assertEquals(6, getPitStonesQuantity(1, pits)),
-                () -> assertEquals(0, getPitStonesQuantity(2, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(1, pits)),
+                () -> assertEquals(7, getPitStonesQuantity(2, pits)),
                 () -> assertEquals(7, getPitStonesQuantity(3, pits)),
                 () -> assertEquals(7, getPitStonesQuantity(4, pits)),
                 () -> assertEquals(7, getPitStonesQuantity(5, pits)),
                 () -> assertEquals(7, getPitStonesQuantity(6, pits)),
                 // HOUSE pit
                 () -> assertEquals(1, getPitStonesQuantity(7, pits)),
-                () -> assertEquals(7, getPitStonesQuantity(8, pits)),
+                () -> assertEquals(6, getPitStonesQuantity(8, pits)),
                 () -> assertEquals(6, getPitStonesQuantity(9, pits)),
                 () -> assertEquals(6, getPitStonesQuantity(10, pits)),
                 () -> assertEquals(6, getPitStonesQuantity(11, pits)),
@@ -106,6 +117,9 @@ public class GameTest {
                 .stream()
                 .mapToInt(Pit::getStonesQuantity)
                 .sum());
+
+        // AND the turn is from the SOUTH_PLAYER
+        assertEquals(Player.SOUTH_PLAYER, game.getBoard().getTurn());
     }
 
     @Test
@@ -150,6 +164,9 @@ public class GameTest {
                 .stream()
                 .mapToInt(Pit::getStonesQuantity)
                 .sum());
+
+        // AND the turn is from the SOUTH_PLAYER
+        assertEquals(Player.NORTH_PLAYER, game.getBoard().getTurn());
     }
 
     @Test
@@ -197,8 +214,53 @@ public class GameTest {
                 .sum());
     }
 
+//    @Test
+//    @DisplayName("Scenario: captures other player's pit")
+//    void captureOtherPlayerPit() {
+//        // GIVEN a new game
+//        Game game = new Game();
+//
+//        // WHEN make a moves on Pits 1, 2, 8 and 1
+//        game.getBoard().move(1);
+//        game.getBoard().move(2);
+//        game.getBoard().move(8);
+//        game.getBoard().move(1);
+//
+//        // THEN the last move should captures other player's pit and his own stone
+//        List<Pit> pits = game.getBoard()
+//                .getPits();
+//
+//        assertAll(
+//                () -> assertEquals(0, getPitStonesQuantity(1, pits)),
+//                () -> assertEquals(0, getPitStonesQuantity(2, pits)),
+//                () -> assertEquals(8, getPitStonesQuantity(3, pits)),
+//                () -> assertEquals(8, getPitStonesQuantity(4, pits)),
+//                () -> assertEquals(8, getPitStonesQuantity(5, pits)),
+//                () -> assertEquals(8, getPitStonesQuantity(6, pits)),
+//                // HOUSE pit
+//                () -> assertEquals(10, getPitStonesQuantity(7, pits)),
+//                () -> assertEquals(0, getPitStonesQuantity(8, pits)),
+//                () -> assertEquals(8, getPitStonesQuantity(9, pits)),
+//                () -> assertEquals(7, getPitStonesQuantity(10, pits)),
+//                () -> assertEquals(7, getPitStonesQuantity(11, pits)),
+//                () -> assertEquals(0, getPitStonesQuantity(12, pits)),
+//                () -> assertEquals(7, getPitStonesQuantity(13, pits)),
+//                // HOUSE pit
+//                () -> assertEquals(1, getPitStonesQuantity(14, pits))
+//        );
+//
+//        // AND stones total quantity should be 72
+//        assertEquals(72, game.getBoard()
+//                .getPits()
+//                .stream()
+//                .mapToInt(Pit::getStonesQuantity)
+//                .sum());
+//
+//        // AND the turn is from the SOUTH_PLAYER
+//        assertEquals(Player.NORTH_PLAYER, game.getBoard().getTurn());
+//    }
+
     // TODO validate move from empty pit
-    // TODO steal opponent stones
     // TODO validate move from house
 
 }
