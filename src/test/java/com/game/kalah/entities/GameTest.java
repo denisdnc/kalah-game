@@ -320,7 +320,18 @@ public class GameTest {
         assertEquals("Invalid move, pit is empty", exception.getMessage());
     }
 
-    // TODO validate move from empty pit
-    // TODO validate move from house
+    @Test
+    @DisplayName("Scenario: validate move from House")
+    void moveFromHouse() {
+        // GIVEN a new game
+        Game game = new Game();
+
+        // WHEN make a move from a House
+        game.getBoard().move(1);
+        BusinessException exception = assertThrows(BusinessException.class, () -> game.getBoard().move(Player.SOUTH_PLAYER.getHouseIndex()));
+
+        // THEN should throw error validating invalid move
+        assertEquals("Invalid move, cannot move from a HOSE type pit", exception.getMessage());
+    }
 
 }

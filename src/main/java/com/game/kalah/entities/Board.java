@@ -46,6 +46,10 @@ public class Board {
             throw new BusinessException("Invalid move, pit is empty");
         }
 
+        if (PitType.HOUSE.equals(movingPit.getType())) {
+            throw new BusinessException("Invalid move, cannot move from a HOSE type pit");
+        }
+
         movingPit.empty();
 
         LoopingListIterator<Pit> loopingListIterator = new LoopingListIterator<>(pits);
