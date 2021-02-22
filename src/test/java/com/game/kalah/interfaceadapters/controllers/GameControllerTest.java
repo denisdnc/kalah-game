@@ -1,10 +1,9 @@
-package com.game.kalah;
+package com.game.kalah.interfaceadapters.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.game.kalah.entities.Game;
 import com.game.kalah.interfaceadapters.controllers.bodies.CreateGameResponseBody;
 import com.game.kalah.usecases.CreateNewGame;
-import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.jupiter.api.Assertions.assertEquals;

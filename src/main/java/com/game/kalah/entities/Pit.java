@@ -4,7 +4,7 @@ public class Pit {
 
     private static final Integer DEFAULT_STONES_QUANTITY = 6;
 
-    private final Integer id;
+    private final int id;
     private final PitType type;
     private int stonesQuantity;
     private final Player owner;

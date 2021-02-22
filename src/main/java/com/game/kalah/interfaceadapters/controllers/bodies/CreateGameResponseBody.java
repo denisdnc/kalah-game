@@ -1,7 +1,5 @@
 package com.game.kalah.interfaceadapters.controllers.bodies;
 
-import org.springframework.hateoas.Link;
-
 import java.net.URI;
 
 public class CreateGameResponseBody {
