@@ -45,8 +45,10 @@ public class Board {
         int pickedStones = movingPit.getStonesQuantity();
         movingPit.empty();
 
+        // Create a iterator to circle the Pit list
         LoopingListIterator<Pit> loopingListIterator = new LoopingListIterator<>(pits);
 
+        // Set iterator to the moving Pit
         for (int i = 0; i < movingPit.getId(); i++) {
             loopingListIterator.next();
         }
@@ -54,32 +56,45 @@ public class Board {
         for (int i = 0; i < pickedStones; i++) {
             Pit currentPit = loopingListIterator.next();
             if (isOpponentHouse(movingPit, currentPit)) {
+                // Skip opponent house
                 currentPit = loopingListIterator.next();
             }
             currentPit.add(1);
 
             if (isLastStone(i, pickedStones)) {
-                // After the movement still 1, meaning that was empty before
-                if (currentPit.getOwner().equals(turn) &&
-                        PitType.REGULAR.equals(currentPit.getType()) &&
-                        currentPit.getStonesQuantity() == 1 &&
-                        getOppositePit(currentPit).getStonesQuantity() > 0) {
-                    Pit oppositePit = getOppositePit(currentPit);
-                    int stonesCaptureQuantity = oppositePit.getStonesQuantity() + currentPit.getStonesQuantity();
-                    Pit playerHouse = getPlayerHouse(turn);
-                    playerHouse.setStonesQuantity(playerHouse.getStonesQuantity() + stonesCaptureQuantity);
-                    currentPit.empty();
-                    oppositePit.empty();
-                }
-
-                if (isPlayerHouse(currentPit, movingPit.getId())) {
-                    this.turn = getCurrentPlayer(movingPit.getId());
-                } else {
-                    this.turn = getOpponent(movingPit.getId());
-                }
+                moveLastStone(movingPit, currentPit);
             }
         }
 
+    }
+
+    private void moveLastStone(Pit movingPit, Pit currentPit) {
+        if (isAllowedToCatch(currentPit)) {
+            capturesOppositeStones(currentPit);
+        }
+        setNextTurn(movingPit, currentPit);
+    }
+
+    private boolean isAllowedToCatch(Pit currentPit) {
+        return currentPit.getOwner().equals(turn) &&
+                PitType.REGULAR.equals(currentPit.getType()) &&
+                currentPit.getStonesQuantity() == 1 &&
+                getOppositePit(currentPit).getStonesQuantity() > 0;
+    }
+
+    private void capturesOppositeStones(Pit currentPit) {
+        Pit oppositePit = getOppositePit(currentPit);
+        int stonesCaptureQuantity = oppositePit.getStonesQuantity() + currentPit.getStonesQuantity();
+        Pit playerHouse = getPlayerHouse(turn);
+        playerHouse.add(stonesCaptureQuantity);
+        currentPit.empty();
+        oppositePit.empty();
+    }
+
+    private void setNextTurn(Pit movingPit, Pit currentPit) {
+        if (!(PitType.HOUSE.equals(currentPit.getType()) && currentPit.getOwner().equals(turn))) {
+            this.turn = getOpponent(movingPit.getId());
+        }
     }
 
     private void validateMove(Pit movingPit) {
@@ -120,7 +135,7 @@ public class Board {
     }
 
     private Player getOpponent(int movingPit) {
-        return getCurrentPlayer(movingPit).equals(Player.SOUTH_PLAYER) ? Player.NORTH_PLAYER : Player.SOUTH_PLAYER;
+        return turn.equals(Player.SOUTH_PLAYER) ? Player.NORTH_PLAYER : Player.SOUTH_PLAYER;
     }
 
     private Pit getOppositePit(Pit currentPit) {
