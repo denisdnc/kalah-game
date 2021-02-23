@@ -174,34 +174,32 @@ public class GameTest {
         // GIVEN a new game
         Game game = new Game();
 
-        // WHEN make a moves on Pits 1, 13, 2, 12, 6 and 4
+        // WHEN make a moves on Pits
         game.getBoard().move(1);
+        game.getBoard().move(2);
         game.getBoard().move(13);
         game.getBoard().move(2);
         game.getBoard().move(12);
         game.getBoard().move(6);
-        game.getBoard().move(4);
 
         // THEN the last move should step over opponent's HOUSE and status should be
         List<Pit> pits = game.getBoard()
                 .getPits();
 
         assertAll(
-                () -> assertEquals(4, getPitStonesQuantity(1, pits)),
+                () -> assertEquals(3, getPitStonesQuantity(1, pits)),
                 () -> assertEquals(1, getPitStonesQuantity(2, pits)),
-                () -> assertEquals(10, getPitStonesQuantity(3, pits)),
-                () -> assertEquals(0, getPitStonesQuantity(4, pits)),
-                () -> assertEquals(10, getPitStonesQuantity(5, pits)),
-                () -> assertEquals(1, getPitStonesQuantity(6, pits)),
-                // HOUSE pit
-                () -> assertEquals(4, getPitStonesQuantity(7, pits)),
-                () -> assertEquals(9, getPitStonesQuantity(8, pits)),
-                () -> assertEquals(9, getPitStonesQuantity(9, pits)),
-                () -> assertEquals(9, getPitStonesQuantity(10, pits)),
-                () -> assertEquals(8, getPitStonesQuantity(11, pits)),
-                () -> assertEquals(2, getPitStonesQuantity(12, pits)),
-                () -> assertEquals(3, getPitStonesQuantity(13, pits)),
-                // HOUSE pit
+                () -> assertEquals(11, getPitStonesQuantity(3, pits)),
+                () -> assertEquals(10, getPitStonesQuantity(4, pits)),
+                () -> assertEquals(9, getPitStonesQuantity(5, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(6, pits)),
+                () -> assertEquals(3, getPitStonesQuantity(7, pits)),
+                () -> assertEquals(8, getPitStonesQuantity(8, pits)),
+                () -> assertEquals(8, getPitStonesQuantity(9, pits)),
+                () -> assertEquals(7, getPitStonesQuantity(10, pits)),
+                () -> assertEquals(7, getPitStonesQuantity(11, pits)),
+                () -> assertEquals(1, getPitStonesQuantity(12, pits)),
+                () -> assertEquals(2, getPitStonesQuantity(13, pits)),
                 () -> assertEquals(2, getPitStonesQuantity(14, pits))
         );
 
@@ -345,17 +343,17 @@ public class GameTest {
         assertEquals("Pit now found: 100", exception.getMessage());
     }
 
-//    @Test
-//    @DisplayName("Scenario: invalid turn")
-//    void invalidTurn() {
-//        // GIVEN a new game
-//        Game game = new Game();
-//
-//        // WHEN make a move from a invalid pit owner
-//        BusinessException exception = assertThrows(BusinessException.class, () -> game.getBoard().move(8));
-//
-//        // THEN should throw error validating invalid move
-//        assertEquals("Invalid turn, player turn: SOUTH_PLAYER", exception.getMessage());
-//    }
+    @Test
+    @DisplayName("Scenario: invalid turn")
+    void invalidTurn() {
+        // GIVEN a new game
+        Game game = new Game();
+
+        // WHEN make a move from a invalid pit owner
+        BusinessException exception = assertThrows(BusinessException.class, () -> game.getBoard().move(8));
+
+        // THEN should throw error validating invalid move
+        assertEquals("Invalid turn, player turn: SOUTH_PLAYER", exception.getMessage());
+    }
 
 }

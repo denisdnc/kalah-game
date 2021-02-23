@@ -132,6 +132,10 @@ public class Board {
         if (PitType.HOUSE.equals(movingPit.getType())) {
             throw new BusinessException("Invalid move, cannot move from a HOSE type pit");
         }
+
+        if (!movingPit.getOwner().equals(turn)) {
+            throw new BusinessException("Invalid turn, player turn: SOUTH_PLAYER");
+        }
     }
 
     private boolean isOpponentHouse(Pit movingPit, Pit currentPit) {
