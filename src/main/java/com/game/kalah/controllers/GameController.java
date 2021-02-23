@@ -1,8 +1,10 @@
 package com.game.kalah.controllers;
 
+import com.game.kalah.controllers.models.BusinessErrorResponseBody;
 import com.game.kalah.controllers.models.CreateGameResponseBody;
 import com.game.kalah.controllers.models.GameStatusResponseBody;
 import com.game.kalah.entities.Game;
+import com.game.kalah.exceptions.BusinessException;
 import com.game.kalah.mappers.GameMapper;
 import com.game.kalah.usecases.CreateNewGame;
 import com.game.kalah.usecases.MakeAMove;
@@ -52,6 +54,13 @@ public class GameController {
                                                             @PathVariable("pitId") Integer pitId) {
         Game game = makeAMove.execute(UUID.fromString(gameId), pitId);
         return new ResponseEntity<>(gameMapper.fromEntityToGameStatusResponseBody(game), HttpStatus.OK);
+    }
+
+    @ExceptionHandler(value = BusinessException.class)
+    public ResponseEntity<BusinessErrorResponseBody> handleException(Exception e) {
+        BusinessErrorResponseBody businessErrorResponseBody =
+                new BusinessErrorResponseBody(e.getMessage());
+        return new ResponseEntity<>(businessErrorResponseBody, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
 }

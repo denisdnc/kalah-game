@@ -1,9 +1,11 @@
 package com.game.kalah.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.game.kalah.controllers.models.BusinessErrorResponseBody;
 import com.game.kalah.entities.Game;
 import com.game.kalah.controllers.models.CreateGameResponseBody;
 import com.game.kalah.controllers.models.GameStatusResponseBody;
+import com.game.kalah.exceptions.BusinessException;
 import com.game.kalah.usecases.CreateNewGame;
 import com.game.kalah.usecases.MakeAMove;
 import org.junit.jupiter.api.DisplayName;
@@ -70,7 +72,6 @@ public class GameControllerTest {
         assertThat(createGameResponseBody.getUri().toString(), matchesPattern("^http:\\/\\/localhost\\/games\\/(.*)"));
     }
 
-
     @Test
     @DisplayName("Scenario: do PUT and get HTTP status code 200")
     public void doPutAndGet200() throws Exception {
@@ -112,5 +113,31 @@ public class GameControllerTest {
         assertEquals(gameStatusResponseBody.getStatus().get("14"), "0");
     }
 
+
+    @Test
+    @DisplayName("Scenario: do PUT and get HTTP status code 422 business error")
+    public void doPutAndGet422() throws Exception {
+        // GIVEN a Game ID and a pit id
+        Game game = new Game();
+        UUID gameId = game.getId();
+        int pitId = 1;
+
+        // GIVEN a response from use case
+        when(makeAMove.execute(gameId, 1)).thenThrow(new BusinessException("Business message"));
+
+        // WHEN make a PUT request on Games endpoint
+        MvcResult result = mockMvc.perform(put("/games/{id}/pits/{pitId}", gameId.toString(), pitId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+
+        // THEN should return HTTP status 200
+        assertEquals(422, result.getResponse().getStatus());
+
+        // AND should match body
+        BusinessErrorResponseBody gameStatusResponseBody =
+                objectMapper.readValue(result.getResponse().getContentAsString(), BusinessErrorResponseBody.class);
+        assertEquals("Business message", gameStatusResponseBody.getMessage());
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.game.kalah.entities;
 
 import com.game.kalah.exceptions.BusinessException;
+import com.game.kalah.fixtures.GameFixtures;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -128,11 +129,8 @@ public class GameTest {
         // GIVEN a new game
         Game game = new Game();
 
-        // WHEN make a moves on Pits 1, 13, 2, 12 and 6
-        game.getBoard().move(1);
-        game.getBoard().move(2);
-        game.getBoard().move(8);
-        game.getBoard().move(6);
+        // WHEN make a moves on Pits
+        makeMoves(game, 1, 2, 8, 6);
 
         // THEN the last move should step over opponent's HOUSE and status should be
         List<Pit> pits = game.getBoard()
@@ -175,12 +173,7 @@ public class GameTest {
         Game game = new Game();
 
         // WHEN make a moves on Pits
-        game.getBoard().move(1);
-        game.getBoard().move(2);
-        game.getBoard().move(13);
-        game.getBoard().move(2);
-        game.getBoard().move(12);
-        game.getBoard().move(6);
+        makeMoves(game, 1, 2, 13, 2, 12, 6);
 
         // THEN the last move should step over opponent's HOUSE and status should be
         List<Pit> pits = game.getBoard()
@@ -217,11 +210,8 @@ public class GameTest {
         // GIVEN a new game
         Game game = new Game();
 
-        // WHEN make a moves on Pits 1, 2, 8 and 1
-        game.getBoard().move(1);
-        game.getBoard().move(2);
-        game.getBoard().move(8);
-        game.getBoard().move(1);
+        // WHEN make a moves on Pits
+        makeMoves(game, 1, 2, 8, 1);
 
         // THEN the last move should captures other player's pit and his own stone
         List<Pit> pits = game.getBoard()
@@ -262,13 +252,7 @@ public class GameTest {
         Game game = new Game();
 
         // WHEN make a moves on Pits
-        game.getBoard().move(1);
-        game.getBoard().move(4);
-        game.getBoard().move(8);
-        game.getBoard().move(5);
-        game.getBoard().move(9);
-        game.getBoard().move(4);
-        game.getBoard().move(8);
+        makeMoves(game, 1, 4, 8, 5, 9, 4, 8);
 
         // THEN the last move should captures other player's pit and his own stone
         List<Pit> pits = game.getBoard()
@@ -327,7 +311,7 @@ public class GameTest {
         BusinessException exception = assertThrows(BusinessException.class, () -> game.getBoard().move(Player.SOUTH_PLAYER.getHouseIndex()));
 
         // THEN should throw error validating invalid move
-        assertEquals("Invalid move, cannot move from a HOSE type pit", exception.getMessage());
+        assertEquals("Invalid move, cannot move from a HOUSE type pit", exception.getMessage());
     }
 
     @Test
@@ -344,8 +328,8 @@ public class GameTest {
     }
 
     @Test
-    @DisplayName("Scenario: invalid turn")
-    void invalidTurn() {
+    @DisplayName("Scenario: invalid turn - SOUTH_PLAYER")
+    void invalidTurnSouthPlayer() {
         // GIVEN a new game
         Game game = new Game();
 
@@ -354,6 +338,103 @@ public class GameTest {
 
         // THEN should throw error validating invalid move
         assertEquals("Invalid turn, player turn: SOUTH_PLAYER", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Scenario: invalid turn - NORTH_PLAYER")
+    void invalidTurnNorthPlayer() {
+        // GIVEN a new game
+        Game game = new Game();
+
+        // WHEN make a move from a invalid pit owner
+        makeMoves(game, 1, 2);
+        BusinessException exception = assertThrows(BusinessException.class, () -> game.getBoard().move(3));
+
+        // THEN should throw error validating invalid move
+        assertEquals("Invalid turn, player turn: NORTH_PLAYER", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Scenario: endgame - SOUTH_PLAYER wins")
+    void endgameSouthPlayerWins() {
+        // GIVEN a Game near to end
+        Game game = GameFixtures.endgame();
+
+        // WHEN make a move the Pits
+        game.getBoard().move(6);
+
+        // THEN the last move should captures all other player's pits
+        List<Pit> pits = game.getBoard()
+                .getPits();
+
+        assertAll(
+                () -> assertEquals(0, getPitStonesQuantity(1, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(2, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(3, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(4, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(5, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(6, pits)),
+                () -> assertEquals(7, getPitStonesQuantity(7, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(8, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(9, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(10, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(11, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(12, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(13, pits)),
+                () -> assertEquals(5, getPitStonesQuantity(14, pits))
+        );
+
+        // AND stones total quantity should be 72
+        assertEquals(12, game.getBoard()
+                .getPits()
+                .stream()
+                .mapToInt(Pit::getStonesQuantity)
+                .sum());
+    }
+
+    @Test
+    @DisplayName("Scenario: endgame - NORTH_PLAYER wins")
+    void endgameNorthPlayerWins() {
+        // GIVEN a Game near to end
+        Game game = GameFixtures.endgame();
+        game.getBoard().setTurn(Player.NORTH_PLAYER);
+
+        // WHEN make a move the Pits
+        game.getBoard().move(13);
+
+        // THEN the last move should captures all other player's pits
+        List<Pit> pits = game.getBoard()
+                .getPits();
+
+        assertAll(
+                () -> assertEquals(0, getPitStonesQuantity(1, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(2, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(3, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(4, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(5, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(6, pits)),
+                () -> assertEquals(5, getPitStonesQuantity(7, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(8, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(9, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(10, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(11, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(12, pits)),
+                () -> assertEquals(0, getPitStonesQuantity(13, pits)),
+                () -> assertEquals(7, getPitStonesQuantity(14, pits))
+        );
+
+        // AND stones total quantity should be 72
+        assertEquals(12, game.getBoard()
+                .getPits()
+                .stream()
+                .mapToInt(Pit::getStonesQuantity)
+                .sum());
+    }
+
+    void makeMoves(Game game, int... pitIds) {
+        for (int pitId : pitIds) {
+            game.getBoard().move(pitId);
+        }
     }
 
 }

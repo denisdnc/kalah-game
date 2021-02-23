@@ -55,6 +55,21 @@ public class Board {
                 .orElseThrow(() -> new BusinessException(String.format("Pit now found: %s", pitId)));
         validateMove(movingPit);
         sowsToRight(movingPit);
+        endgame(movingPit);
+    }
+
+    private void validateMove(Pit movingPit) {
+        if (!movingPit.getOwner().equals(turn)) {
+            throw new BusinessException(String.format("Invalid turn, player turn: %s", turn.toString()));
+        }
+
+        if (movingPit.getStonesQuantity() == 0) {
+            throw new BusinessException("Invalid move, pit is empty");
+        }
+
+        if (PitType.HOUSE.equals(movingPit.getType())) {
+            throw new BusinessException("Invalid move, cannot move from a HOUSE type pit");
+        }
     }
 
     private void sowsToRight(Pit movingPit) {
@@ -87,7 +102,7 @@ public class Board {
     /**
      * In the last stone must set the next turn and capture opponent stones if allowed.
      *
-     * @param movingPit the Pit where the move started
+     * @param movingPit  the Pit where the move started
      * @param currentPit the Pit being sowed
      */
     private void moveLastStone(Pit movingPit, Pit currentPit) {
@@ -120,21 +135,7 @@ public class Board {
 
     private void setNextTurn(Pit movingPit, Pit currentPit) {
         if (!(PitType.HOUSE.equals(currentPit.getType()) && currentPit.getOwner().equals(turn))) {
-            this.turn = getOpponent(movingPit.getId());
-        }
-    }
-
-    private void validateMove(Pit movingPit) {
-        if (movingPit.getStonesQuantity() == 0) {
-            throw new BusinessException("Invalid move, pit is empty");
-        }
-
-        if (PitType.HOUSE.equals(movingPit.getType())) {
-            throw new BusinessException("Invalid move, cannot move from a HOSE type pit");
-        }
-
-        if (!movingPit.getOwner().equals(turn)) {
-            throw new BusinessException("Invalid turn, player turn: SOUTH_PLAYER");
+            this.turn = getOpponent(movingPit.getOwner());
         }
     }
 
@@ -144,6 +145,32 @@ public class Board {
 
     private boolean isPlayerHouse(Pit currentPit, int movingPit) {
         return currentPit.getId() == getPlayerHouseIndex(movingPit);
+    }
+
+    /**
+     * The game is over as soon as one of the sides run out of stones. The player who still has stones in his/her pits keeps
+     * them and puts them in his/hers House. The winner of the game is the player who has the most stones in his House.
+     *
+     * @param movingPit the Pit where the move started
+     */
+    private void endgame(Pit movingPit) {
+        if (isPlayerRegularPitsEmpty(movingPit)) {
+            int sum = pits.stream()
+                    .filter(pit -> PitType.REGULAR.equals(pit.getType()))
+                    .mapToInt(Pit::getStonesQuantity)
+                    .sum();
+            getPlayerHouse(movingPit.getOwner()).add(sum);
+            pits.stream()
+                    .filter(pit -> PitType.REGULAR.equals(pit.getType()))
+                    .forEach(Pit::empty);
+        }
+    }
+
+    private boolean isPlayerRegularPitsEmpty(Pit movingPit) {
+        return pits.stream()
+                .filter(pit -> PitType.REGULAR.equals(pit.getType()) &&
+                        movingPit.getOwner().equals(pit.getOwner()))
+                .allMatch(pit -> pit.getStonesQuantity() == 0);
     }
 
     private Pit getPlayerHouse(Player player) {
@@ -161,8 +188,8 @@ public class Board {
         return i == stonesQuantity - 1;
     }
 
-    private Player getOpponent(int movingPit) {
-        return turn.equals(Player.SOUTH_PLAYER) ? Player.NORTH_PLAYER : Player.SOUTH_PLAYER;
+    private Player getOpponent(Player current) {
+        return current.equals(Player.SOUTH_PLAYER) ? Player.NORTH_PLAYER : Player.SOUTH_PLAYER;
     }
 
     private Pit getOppositePit(Pit currentPit) {
@@ -174,6 +201,7 @@ public class Board {
 
     /**
      * Always returns Pits sorted by ID to guarantee right distribution of stones.
+     *
      * @return List of sorted Pits
      */
     public List<Pit> getPits() {
@@ -182,5 +210,9 @@ public class Board {
 
     public Player getTurn() {
         return turn;
+    }
+
+    public void setTurn(Player turn) {
+        this.turn = turn;
     }
 }
