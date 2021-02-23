@@ -1,0 +1,6 @@
+spring:
+  data:
+    mongodb:
+      database: game_db
+      port: 27017
+      host: localhost

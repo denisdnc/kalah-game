@@ -43,7 +43,7 @@ public class GameGatewayMongoImplTest {
         GameDocumentModel gameDocumentModel = mongoTemplate.findOne(query, GameDocumentModel.class, "games");
 
         // AND should match properties
-        assertEquals(game.getId().toString(), gameDocumentModel.getGameId());
+        assertEquals(game.getId().toString(), gameDocumentModel.getId());
         assertEquals(game.getBoard().getTurn().toString(), gameDocumentModel.getBoard().getTurn());
     }
 

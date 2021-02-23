@@ -1,20 +1,22 @@
 package com.game.kalah.interfaceadapters.gateways.models;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("games")
 public class GameDocumentModel {
 
-    private String gameId;
+    @Id
+    private String id;
     private BoardDocumentModel board;
 
-    public GameDocumentModel(String gameId, BoardDocumentModel board) {
-        this.gameId = gameId;
+    public GameDocumentModel(String id, BoardDocumentModel board) {
+        this.id = id;
         this.board = board;
     }
 
-    public String getGameId() {
-        return gameId;
+    public String getId() {
+        return id;
     }
 
     public BoardDocumentModel getBoard() {
