@@ -15,8 +15,12 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @AutoConfigureDataMongo
@@ -70,6 +74,16 @@ public class GameGatewayMongoImplTest {
         assertNotNull(result);
         assertEquals(result.getId().toString(), game.getId().toString());
         assertEquals(result.getBoard().getTurn().toString(), game.getBoard().getTurn().toString());
+    }
+
+    @Test
+    @DisplayName("Scenario: empty find")
+    public void emptyFind() {
+        // WHEN find game by a invalid id
+        Optional<Game> result = gameGateway.findById(UUID.randomUUID());
+
+        // THEN game should be at games collection match properties
+        assertTrue(result.isEmpty());
     }
 
 }
