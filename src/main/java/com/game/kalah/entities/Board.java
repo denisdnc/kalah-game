@@ -59,6 +59,10 @@ public class Board {
     }
 
     private void validateMove(Pit movingPit) {
+        if (isGameOver()) {
+            throw new BusinessException("The Game is over");
+        }
+
         if (!movingPit.getOwner().equals(turn)) {
             throw new BusinessException(String.format("Invalid turn, player turn: %s", turn.toString()));
         }
@@ -70,6 +74,12 @@ public class Board {
         if (PitType.HOUSE.equals(movingPit.getType())) {
             throw new BusinessException("Invalid move, cannot move from a HOUSE type pit");
         }
+    }
+
+    private boolean isGameOver() {
+        return pits.stream()
+                .filter(pit -> PitType.REGULAR.equals(pit.getType()))
+                .allMatch(pit -> pit.getStonesQuantity() == 0);
     }
 
     private void sowsToRight(Pit movingPit) {

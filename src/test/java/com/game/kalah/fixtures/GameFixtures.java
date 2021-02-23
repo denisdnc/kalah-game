@@ -28,4 +28,24 @@ public class GameFixtures {
         return new Game(UUID.randomUUID(), new Board(pits, Player.SOUTH_PLAYER));
     }
 
+    public static Game gameOver() {
+        List<Pit> pits = new ArrayList<>();
+        pits.add(new Pit(1, PitType.REGULAR, 0, Player.SOUTH_PLAYER));
+        pits.add(new Pit(2, PitType.REGULAR, 0, Player.SOUTH_PLAYER));
+        pits.add(new Pit(3, PitType.REGULAR, 0, Player.SOUTH_PLAYER));
+        pits.add(new Pit(4, PitType.REGULAR, 0, Player.SOUTH_PLAYER));
+        pits.add(new Pit(5, PitType.REGULAR, 0, Player.SOUTH_PLAYER));
+        pits.add(new Pit(6, PitType.REGULAR, 0, Player.SOUTH_PLAYER));
+        pits.add(new Pit(7, PitType.HOUSE, 7, Player.SOUTH_PLAYER));
+
+        pits.add(new Pit(8, PitType.REGULAR, 0, Player.NORTH_PLAYER));
+        pits.add(new Pit(9, PitType.REGULAR, 0, Player.NORTH_PLAYER));
+        pits.add(new Pit(10, PitType.REGULAR, 0, Player.NORTH_PLAYER));
+        pits.add(new Pit(11, PitType.REGULAR, 0, Player.NORTH_PLAYER));
+        pits.add(new Pit(12, PitType.REGULAR, 0, Player.NORTH_PLAYER));
+        pits.add(new Pit(13, PitType.REGULAR, 0, Player.NORTH_PLAYER));
+        pits.add(new Pit(14, PitType.HOUSE, 5, Player.NORTH_PLAYER));
+
+        return new Game(UUID.randomUUID(), new Board(pits, Player.SOUTH_PLAYER));
+    }
 }

@@ -360,7 +360,7 @@ public class GameTest {
         // GIVEN a Game near to end
         Game game = GameFixtures.endgame();
 
-        // WHEN make a move the Pits
+        // WHEN make a move on the Pit
         game.getBoard().move(6);
 
         // THEN the last move should captures all other player's pits
@@ -399,7 +399,7 @@ public class GameTest {
         Game game = GameFixtures.endgame();
         game.getBoard().setTurn(Player.NORTH_PLAYER);
 
-        // WHEN make a move the Pits
+        // WHEN make a move on the Pit
         game.getBoard().move(13);
 
         // THEN the last move should captures all other player's pits
@@ -429,6 +429,19 @@ public class GameTest {
                 .stream()
                 .mapToInt(Pit::getStonesQuantity)
                 .sum());
+    }
+
+    @Test
+    @DisplayName("Scenario: endgame validation")
+    void endgameValidation() {
+        // GIVEN a Game near to end
+        Game game = GameFixtures.gameOver();
+
+        // WHEN make a move on the Pit
+        BusinessException exception = assertThrows(BusinessException.class, () -> game.getBoard().move(6));
+
+        // THEN should throw error validating invalid move
+        assertEquals("The Game is over", exception.getMessage());
     }
 
     void makeMoves(Game game, int... pitIds) {
