@@ -7,6 +7,8 @@ import com.game.kalah.mappers.GameMapper;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class GameGatewayMongoImpl implements GameGateway {
 
@@ -22,5 +24,11 @@ public class GameGatewayMongoImpl implements GameGateway {
     public void save(Game game) {
         GameDocumentModel gameDocumentModel = gameMapper.fromEntityToDocumentModel(game);
         mongoTemplate.save(gameDocumentModel);
+    }
+
+    @Override
+    public Game findById(UUID id) {
+        GameDocumentModel result = mongoTemplate.findById(id.toString(), GameDocumentModel.class);
+        return gameMapper.fromDocumentModelToEntity(result);
     }
 }

@@ -12,6 +12,11 @@ public class Game {
         this.board = new Board();
     }
 
+    public Game(UUID id, Board board) {
+        this.id = id;
+        this.board = board;
+    }
+
     public UUID getId() {
         return id;
     }

@@ -4,7 +4,9 @@ import com.game.kalah.exceptions.BusinessException;
 import org.apache.commons.collections4.iterators.LoopingListIterator;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Board {
 
@@ -23,6 +25,11 @@ public class Board {
                     i <= Player.SOUTH_PLAYER.getHouseIndex() ? Player.SOUTH_PLAYER : Player.NORTH_PLAYER));
         }
         this.turn = Player.SOUTH_PLAYER;
+    }
+
+    public Board(List<Pit> pits, Player turn) {
+        this.pits = pits;
+        this.turn = turn;
     }
 
     /**
@@ -130,10 +137,6 @@ public class Board {
         return i == stonesQuantity - 1;
     }
 
-    private Player getCurrentPlayer(int movingPit) {
-        return movingPit < Player.SOUTH_PLAYER.getHouseIndex() ? Player.SOUTH_PLAYER : Player.NORTH_PLAYER;
-    }
-
     private Player getOpponent(int movingPit) {
         return turn.equals(Player.SOUTH_PLAYER) ? Player.NORTH_PLAYER : Player.SOUTH_PLAYER;
     }
@@ -145,15 +148,15 @@ public class Board {
                 .orElse(null);
     }
 
+    /**
+     * Always returns Pits sorted by ID to guarantee right distribution of stones.
+     * @return List of sorted Pits
+     */
     public List<Pit> getPits() {
-        return pits;
+        return pits.stream().sorted(Comparator.comparingInt(Pit::getId)).collect(Collectors.toList());
     }
 
     public Player getTurn() {
         return turn;
-    }
-
-    public void setTurn(Player turn) {
-        this.turn = turn;
     }
 }

@@ -12,4 +12,20 @@ public class PitDocumentModel {
         this.stonesQuantity = stonesQuantity;
         this.owner = owner;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public Integer getStonesQuantity() {
+        return stonesQuantity;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
 }

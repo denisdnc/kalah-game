@@ -3,6 +3,7 @@ package com.game.kalah.interfaceadapters.gateways.impl;
 import com.game.kalah.entities.Game;
 import com.game.kalah.interfaceadapters.gateways.GameGateway;
 import com.game.kalah.interfaceadapters.gateways.models.GameDocumentModel;
+import com.game.kalah.mappers.GameMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +12,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 @AutoConfigureDataMongo
 @ActiveProfiles(value = "test")
+@DirtiesContext
 public class GameGatewayMongoImplTest {
 
     /** component to test */
@@ -27,6 +31,9 @@ public class GameGatewayMongoImplTest {
     /** utils */
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    GameMapper gameMapper;
 
     @Test
     @DisplayName("Scenario: persist game entity with success")
@@ -39,12 +46,30 @@ public class GameGatewayMongoImplTest {
 
         // THEN game should be at games collection
         Query query = new Query();
-        query.addCriteria(Criteria.where("gameId").is(game.getId().toString()));
+        query.addCriteria(Criteria.where("id").is(game.getId().toString()));
         GameDocumentModel gameDocumentModel = mongoTemplate.findOne(query, GameDocumentModel.class, "games");
 
         // AND should match properties
+        assertNotNull(gameDocumentModel);
         assertEquals(game.getId().toString(), gameDocumentModel.getId());
         assertEquals(game.getBoard().getTurn().toString(), gameDocumentModel.getBoard().getTurn());
+    }
+
+    @Test
+    @DisplayName("Scenario: find game by id")
+    public void findGameById() {
+        // GIVEN a new Game already in database
+        Game game = new Game();
+        GameDocumentModel gameDocumentModel = gameMapper.fromEntityToDocumentModel(game);
+        mongoTemplate.save(gameDocumentModel);
+
+        // WHEN find game by id
+        Game result = gameGateway.findById(game.getId());
+
+        // THEN game should be at games collection match properties
+        assertNotNull(result);
+        assertEquals(result.getId().toString(), game.getId().toString());
+        assertEquals(result.getBoard().getTurn().toString(), game.getBoard().getTurn().toString());
     }
 
 }

@@ -16,6 +16,13 @@ public class Pit {
         this.owner = owner;
     }
 
+    public Pit(int id, PitType type, int stonesQuantity, Player owner) {
+        this.id = id;
+        this.type = type;
+        this.stonesQuantity = stonesQuantity;
+        this.owner = owner;
+    }
+
     public void add(int stonesQuantity) {
         this.stonesQuantity = this.stonesQuantity + stonesQuantity;
     }
@@ -34,10 +41,6 @@ public class Pit {
 
     public int getStonesQuantity() {
         return stonesQuantity;
-    }
-
-    public void setStonesQuantity(int stonesQuantity) {
-        this.stonesQuantity = stonesQuantity;
     }
 
     public Player getOwner() {
