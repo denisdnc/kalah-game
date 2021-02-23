@@ -1,4 +1,4 @@
-package com.game.kalah.interfaceadapters.gateways;
+package com.game.kalah.gateways;
 
 import com.game.kalah.entities.Game;
 

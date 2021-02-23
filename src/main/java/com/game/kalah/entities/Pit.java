@@ -9,6 +9,13 @@ public class Pit {
     private int stonesQuantity;
     private final Player owner;
 
+    /**
+     * Instantiates a new Pit with default properties.
+     *
+     * @param id Pit's id
+     * @param type PitType
+     * @param owner Pit's owner
+     */
     public Pit(int id, PitType type, Player owner) {
         this.id = id;
         this.type = type;
@@ -16,6 +23,14 @@ public class Pit {
         this.owner = owner;
     }
 
+    /**
+     * Instantiates a new Pit with default properties.
+     *
+     * @param id Pit's id
+     * @param type PitType
+     * @param stonesQuantity stones quantity
+     * @param owner Pit's owner
+     */
     public Pit(int id, PitType type, int stonesQuantity, Player owner) {
         this.id = id;
         this.type = type;
@@ -23,10 +38,18 @@ public class Pit {
         this.owner = owner;
     }
 
+    /**
+     * Adds a quantity to the current stones quantity.
+     *
+     * @param stonesQuantity stones to be added in the current quantity
+     */
     public void add(int stonesQuantity) {
         this.stonesQuantity = this.stonesQuantity + stonesQuantity;
     }
 
+    /**
+     * Empty the stones quantity of the Pit.
+     */
     public void empty() {
         this.stonesQuantity = 0;
     }

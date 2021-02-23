@@ -16,6 +16,9 @@ public class Board {
     private final List<Pit> pits;
     private Player turn;
 
+    /**
+     * Instantiates a Board with default properties.
+     */
     public Board() {
         // ArrayList is used to maintain the elements insertion order and Search (get method) operations are fast in Arraylist (O(1))
         this.pits = new ArrayList<>();
@@ -27,6 +30,12 @@ public class Board {
         this.turn = Player.SOUTH_PLAYER;
     }
 
+    /**
+     * Instantiates a Board with given properties.
+     *
+     * @param pits List of Pit
+     * @param turn Player turn
+     */
     public Board(List<Pit> pits, Player turn) {
         this.pits = pits;
         this.turn = turn;
@@ -75,6 +84,12 @@ public class Board {
 
     }
 
+    /**
+     * In the last stone must set the next turn and capture opponent stones if allowed.
+     *
+     * @param movingPit the Pit where the move started
+     * @param currentPit the Pit being sowed
+     */
     private void moveLastStone(Pit movingPit, Pit currentPit) {
         if (isAllowedToCatch(currentPit)) {
             capturesOppositeStones(currentPit);
@@ -89,6 +104,11 @@ public class Board {
                 getOppositePit(currentPit).getStonesQuantity() > 0;
     }
 
+    /**
+     * The player captures this stone and all stones in the opposite pit (the other players' pit) and puts them in his own House.
+     *
+     * @param currentPit the Pit being sowed
+     */
     private void capturesOppositeStones(Pit currentPit) {
         Pit oppositePit = getOppositePit(currentPit);
         int stonesCaptureQuantity = oppositePit.getStonesQuantity() + currentPit.getStonesQuantity();

@@ -1,4 +1,4 @@
-package com.game.kalah.interfaceadapters.controllers.models;
+package com.game.kalah.controllers.models;
 
 import java.net.URI;
 

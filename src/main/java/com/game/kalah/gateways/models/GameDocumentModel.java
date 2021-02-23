@@ -1,4 +1,4 @@
-package com.game.kalah.interfaceadapters.gateways.models;
+package com.game.kalah.gateways.models;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

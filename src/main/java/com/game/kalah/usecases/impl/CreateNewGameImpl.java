@@ -1,11 +1,12 @@
 package com.game.kalah.usecases.impl;
 
 import com.game.kalah.entities.Game;
-import com.game.kalah.interfaceadapters.gateways.GameGateway;
+import com.game.kalah.gateways.GameGateway;
 import com.game.kalah.usecases.CreateNewGame;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
 
 @Component
 public class CreateNewGameImpl implements CreateNewGame {

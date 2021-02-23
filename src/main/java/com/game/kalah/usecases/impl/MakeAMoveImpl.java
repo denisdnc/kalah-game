@@ -2,7 +2,7 @@ package com.game.kalah.usecases.impl;
 
 import com.game.kalah.entities.Game;
 import com.game.kalah.exceptions.BusinessException;
-import com.game.kalah.interfaceadapters.gateways.GameGateway;
+import com.game.kalah.gateways.GameGateway;
 import com.game.kalah.usecases.MakeAMove;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,8 +1,8 @@
-package com.game.kalah.interfaceadapters.gateways.impl;
+package com.game.kalah.gateways.impl;
 
 import com.game.kalah.entities.Game;
-import com.game.kalah.interfaceadapters.gateways.GameGateway;
-import com.game.kalah.interfaceadapters.gateways.models.GameDocumentModel;
+import com.game.kalah.gateways.GameGateway;
+import com.game.kalah.gateways.models.GameDocumentModel;
 import com.game.kalah.mappers.GameMapper;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;

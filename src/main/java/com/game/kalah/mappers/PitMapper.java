@@ -3,7 +3,7 @@ package com.game.kalah.mappers;
 import com.game.kalah.entities.Pit;
 import com.game.kalah.entities.PitType;
 import com.game.kalah.entities.Player;
-import com.game.kalah.interfaceadapters.gateways.models.PitDocumentModel;
+import com.game.kalah.gateways.models.PitDocumentModel;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

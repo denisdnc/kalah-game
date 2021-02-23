@@ -1,9 +1,9 @@
-package com.game.kalah.interfaceadapters.controllers;
+package com.game.kalah.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.game.kalah.entities.Game;
-import com.game.kalah.interfaceadapters.controllers.models.CreateGameResponseBody;
-import com.game.kalah.interfaceadapters.controllers.models.GameStatusResponseBody;
+import com.game.kalah.controllers.models.CreateGameResponseBody;
+import com.game.kalah.controllers.models.GameStatusResponseBody;
 import com.game.kalah.usecases.CreateNewGame;
 import com.game.kalah.usecases.MakeAMove;
 import org.junit.jupiter.api.DisplayName;

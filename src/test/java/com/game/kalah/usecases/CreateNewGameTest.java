@@ -1,7 +1,7 @@
 package com.game.kalah.usecases;
 
 import com.game.kalah.entities.Game;
-import com.game.kalah.interfaceadapters.gateways.GameGateway;
+import com.game.kalah.gateways.GameGateway;
 import com.game.kalah.usecases.impl.CreateNewGameImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
