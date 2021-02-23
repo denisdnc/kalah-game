@@ -1,6 +1,7 @@
 package com.game.kalah.usecases.impl;
 
 import com.game.kalah.entities.Game;
+import com.game.kalah.exceptions.BusinessException;
 import com.game.kalah.interfaceadapters.gateways.GameGateway;
 import com.game.kalah.usecases.MakeAMove;
 import org.slf4j.Logger;
@@ -23,7 +24,8 @@ public class MakeAMoveImpl implements MakeAMove {
     @Override
     public Game execute(UUID gameId, Integer pitId) {
         logger.info("Making a move on game: {} and pit id: {}", gameId.toString(), pitId);
-        Game currentGame = gameGateway.findById(gameId);
+        Game currentGame = gameGateway.findById(gameId)
+                .orElseThrow(() -> new BusinessException(String.format("Game not found: %s", gameId.toString())));
         currentGame.getBoard().move(pitId);
         gameGateway.save(currentGame);
         logger.info("Game updated: {} and pit id: {}", gameId.toString(), pitId);

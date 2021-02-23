@@ -64,7 +64,7 @@ public class GameGatewayMongoImplTest {
         mongoTemplate.save(gameDocumentModel);
 
         // WHEN find game by id
-        Game result = gameGateway.findById(game.getId());
+        Game result = gameGateway.findById(game.getId()).get();
 
         // THEN game should be at games collection match properties
         assertNotNull(result);

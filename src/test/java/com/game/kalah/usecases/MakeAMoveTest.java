@@ -1,25 +1,30 @@
 package com.game.kalah.usecases;
 
 import com.game.kalah.entities.Game;
+import com.game.kalah.exceptions.BusinessException;
 import com.game.kalah.interfaceadapters.gateways.GameGateway;
-import com.game.kalah.usecases.impl.CreateNewGameImpl;
 import com.game.kalah.usecases.impl.MakeAMoveImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class MakeAMoveTest {
 
-    /** dependencies */
+    /**
+     * dependencies
+     */
     GameGateway gameGateway = mock(GameGateway.class);
 
-    /** component to test */
+    /**
+     * component to test
+     */
     MakeAMove makeAMove = new MakeAMoveImpl(gameGateway);
 
     @Test
@@ -32,7 +37,7 @@ public class MakeAMoveTest {
         Integer pitId = 1;
 
         // AND a Game returned from gateway
-        when(gameGateway.findById(gameId)).thenReturn(new Game());
+        when(gameGateway.findById(gameId)).thenReturn(Optional.of(new Game()));
 
         // WHEN make a move
         Game game = makeAMove.execute(gameId, pitId);
@@ -48,6 +53,26 @@ public class MakeAMoveTest {
 
         // AND should return the updated game
         assertNotNull(game);
+    }
+
+    @Test
+    @DisplayName("Game not found")
+    public void gameNotFound() {
+        // GIVEN a invalid game ID
+        UUID gameId = UUID.randomUUID();
+
+        // AND a pit id
+        Integer pitId = 1;
+
+        // AND a Game returned from gateway
+        when(gameGateway.findById(gameId))
+                .thenReturn(Optional.empty());
+
+        // WHEN make a move
+        BusinessException exception = assertThrows(BusinessException.class, () -> makeAMove.execute(gameId, pitId));
+
+        // THEN should throw error validating invalid move
+        assertEquals(String.format("Game not found: %s", gameId.toString()), exception.getMessage());
     }
 
 }
