@@ -20,7 +20,6 @@ public class Board {
      * Instantiates a Board with default properties.
      */
     public Board() {
-        // ArrayList is used to maintain the elements insertion order and Search (get method) operations are fast in Arraylist (O(1))
         this.pits = new ArrayList<>();
         for (int i = 1; i <= PITS_TOTAL_QUANTITY; i++) {
             pits.add(new Pit(i,
